@@ -1,0 +1,16 @@
+.element {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr minmax(max-content, min-content);
+  grid-template-rows: 282px 1fr;
+  column-gap: 17px;
+  margin: 0;
+  padding: 0;
+  background-color: #fff;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+  position: relative;
+}

@@ -1,0 +1,41 @@
+.profile-info__avatar-button {
+  position: absolute;
+  height: 120px;
+  width: 120px;
+  background-color: rgba(0, 0, 0, .8);
+  background-repeat: no-repeat;
+  background-position: center;
+  top: 159px;
+  left: calc(50% - 440px);
+  opacity: 0;
+  border: none;
+  outline: 1px black;
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+  transition: opacity .5s ease;
+  -webkit-transition: opacity .5s ease;
+  -moz-transition: opacity .5s ease;
+  -ms-transition: opacity .5s ease;
+  -o-transition: opacity .5s ease;
+}
+
+@media screen and (max-width: 934px) {
+  .profile-info__avatar-button {
+    left: 19px;
+  }
+}
+
+@media screen and (max-width: 699px) {
+  .profile-info__avatar-button {
+    top: 126px;
+    left: calc(50% - 60px);
+  }
+}
+
+.profile-info__avatar-button:hover {
+  opacity: 1;
+  cursor: pointer;
+}

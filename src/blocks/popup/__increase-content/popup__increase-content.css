@@ -1,0 +1,8 @@
+.popup__increase-content {
+  max-height: 75vh;
+  position: relative;
+  margin: auto;
+  padding: 0;
+  box-sizing: border-box;
+  color: #fff;
+}

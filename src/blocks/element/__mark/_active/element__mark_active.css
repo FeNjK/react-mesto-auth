@@ -1,0 +1,4 @@
+.element__mark_active {
+  background-image: url(../../../../images/heart_black.svg);
+  opacity: 1;
+}

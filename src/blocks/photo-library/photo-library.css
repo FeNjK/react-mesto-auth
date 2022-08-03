@@ -1,0 +1,11 @@
+.photo-library {
+  max-width: 880px;
+  margin: 51px auto 0;
+  padding: 0;
+}
+
+@media screen and (max-width: 700px) {
+  .photo-library {
+    margin: 36px 0 0;
+  }
+}
