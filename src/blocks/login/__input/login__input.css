@@ -1,0 +1,23 @@
+.login__input {
+  margin: 0 0 20px 0;
+  padding: 1px;
+  border: none;
+  border-bottom: 2px solid #ccc;
+  font-size: 14px;
+  line-height: 1.21;
+  font-weight: 400;
+  height: 33px;
+  background-color: #000;
+  color: #ccc;
+  width: 100%;
+  outline: none;
+  background-clip: padding-box;
+}
+
+.login__input:hover {
+  cursor: pointer;
+}
+
+.login__input:focus {
+  cursor: default;
+}

@@ -10,7 +10,7 @@ class Api {
       return res.json();
     }
     // если ошибка, отклоняем промис
-    return Promise.reject(`Возникла ошибка ${res.status}`);
+    return Promise.reject(`Возникла ошибка ${res.status} : ${res.statusText}`);
   }
 
   getUserInfo() {

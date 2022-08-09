@@ -1,0 +1,25 @@
+.register__link {
+  font-size: 14px;
+  line-height: 1.21;
+  font-weight: 400;
+  margin-top: 15px;
+  color: #fff;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+}
+
+.register__link:hover {
+  opacity: 0.6;
+  transition: visibility 0.4s ease-out, opacity 0.4s ease-out;
+  -webkit-transition: visibility 0.4s ease-out, opacity 0.4s ease-out;
+  -moz-transition: visibility 0.4s ease-out, opacity 0.4s ease-out;
+  -ms-transition: visibility 0.4s ease-out, opacity 0.4s ease-out;
+  -o-transition: visibility 0.4s ease-out, opacity 0.4s ease-out;
+}
+
+@media screen and (max-width: 769px) {
+  .register__link {
+    margin-top: 20px;
+  }
+}

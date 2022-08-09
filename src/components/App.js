@@ -9,6 +9,12 @@ import EditProfilePopup from "./EditProfilePopup.js";
 import EditAvatarPopup from "./EditAvatarPopup.js";
 import AddPlacePopup from "./AddPlacePopup.js";
 //import ConfirmPopup from "./ConfirmPopup.js";
+import { useHistory, Route, Switch, Redirect } from "react-router-dom"
+import ProtectedRoute from './ProtectedRoute.js';
+import Login from "./Login.js";
+import Register from "./Register.js";
+import InfoTooltip from "./InfoTooltip.js";
+import apiAuth from "../utils/ApiAuth.js";
 
 function App() {
   const [currentUser, setCurrentUser] = useState({ name: "", about: "" });
@@ -18,6 +24,79 @@ function App() {
   //const [isConfirmPopupOpen, setIsConfirmPopupOpen] = useState(null);
   const [selectedCard, setSelectedCard] = useState(null);
   const [cards, setCards] = useState([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [authorizationEmail, setAuthorizationEmail] = useState(null);
+  const [registration, setRegistration] = useState(null);
+  const [infoToolTipMessage, setInfoToolTipMessage] = useState(false);
+
+  const history = useHistory();
+
+  function handleTokenCheck() {
+    const jwt = localStorage.getItem('jwt');
+    if (!jwt) {
+      return;
+    }
+
+    apiAuth
+      .getEmail(jwt)
+      .then(({ email, password }) => {
+        setAuthorizationEmail({ email, password });
+        setIsLoggedIn(true);
+        history.push("/");
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+  };
+
+  useEffect(() => {
+    handleTokenCheck();
+  }, []);
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      history.push('/');
+    }
+  }, [isLoggedIn]);
+
+  function handleLogin(data) {
+    apiAuth
+      .autorise(data)
+      .then((data) => {
+        setIsLoggedIn(true);
+        localStorage.setItem("jwt", data.token);
+        history.push("/");
+      })
+      .catch((err) => {
+        console.log(
+          `Возникла ошибка при авторизации пользователя ${err}`
+        );
+      })
+  }
+
+  function handleRegister(data) {
+    apiAuth
+      .register(data)
+      .then((data) => {
+        setRegistration(true);
+        handleInfoToolTipMessage();
+        history.push("/sign-in");
+      })
+      .catch((err) => {
+        console.log(
+          `Возникла ошибка при регистрации пользователя ${err}`
+        );
+        setRegistration(false);
+        handleInfoToolTipMessage();
+        history.push("/sign-up");
+      })
+  }
+
+  function handleSignOut() {
+    setIsLoggedIn(false);
+    localStorage.removeItem("jwt");
+    history.push("/sign-in");
+  }
 
   // Используем стейт для данных из Api
   useEffect(() => {
@@ -66,7 +145,6 @@ function App() {
 
   // Сделано по аналогии с функцией лайка карточки
   function handleCardDelete(card) {
-    //console.log(card);
     api
       .removeCard(card._id)
       .then(() => {
@@ -140,26 +218,50 @@ function App() {
     setIsConfirmPopupOpen(card);
   } */
 
+  function handleInfoToolTipMessage() {
+    setInfoToolTipMessage(true);
+  }
+
   function closeAllPopups() {
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
+    setInfoToolTipMessage(false);
     setSelectedCard(null);
     /* setIsConfirmPopupOpen(null); */
   }
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
-      <Header />
-      <Main
-        onEditProfile={handleEditProfileClick}
-        onAddPlace={handleAddPlaceClick}
-        onEditAvatar={handleEditAvatarClick}
-        cards={cards}
-        onCardClick={handleCardClick}
-        onCardLike={handleCardLike}
-        onCardDelete={handleCardDelete}
+      <Header 
+        loggedIn={isLoggedIn}
+        signOut={handleSignOut}
+        authorizationEmail={authorizationEmail}
       />
+      <Switch>
+        <Route path="/sign-in">
+          <Login onLogin={handleLogin} />
+        </Route>
+        <Route path="/sign-up">
+          <Register onLogin={handleRegister} />
+        </Route>
+      
+        <ProtectedRoute
+          path="/"
+          loggedIn={isLoggedIn}
+          component={Main}
+            onEditProfile={handleEditProfileClick}
+            onAddPlace={handleAddPlaceClick}
+            onEditAvatar={handleEditAvatarClick}
+            cards={cards}
+            onCardClick={handleCardClick}
+            onCardLike={handleCardLike}
+            onCardDelete={handleCardDelete}
+        />
+        <Route>
+          {isLoggedIn ? <Redirect to="/sign-in" /> : <Redirect to="/" />}
+        </Route>
+      </Switch>
       <Footer />
       <ImagePopup card={selectedCard} onClose={closeAllPopups} />
       <EditAvatarPopup
@@ -176,6 +278,11 @@ function App() {
         isOpen={isAddPlacePopupOpen}
         onClose={closeAllPopups}
         onAddPlace={handleAddPlace}
+      />
+      <InfoTooltip
+        isOpen={infoToolTipMessage}
+        onClose={closeAllPopups}
+        isRegistrationGood={registration}
       />
       {/* Заготовка реализации функций удаления карточек */}
       {/*Что-то я тут наворотил (по аналогии...)*/}

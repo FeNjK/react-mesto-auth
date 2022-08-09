@@ -1,10 +1,15 @@
-function PopupWithForm({ isOpen, onClose, name, title, children, buttonText, onSubmit }) {
-  
+function PopupWithForm({
+  isOpen,
+  onClose,
+  name,
+  title,
+  children,
+  buttonText,
+  onSubmit,
+}) {
   return (
     <div
-      className={`popup popup_animation popup_task_${name} ${
-        isOpen && "popup_activ"
-      }`}
+      className={`popup popup_animation popup_task_${name} ${isOpen && "popup_activ"}`}
     >
       <div className="popup__content">
         <button
