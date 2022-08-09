@@ -25,7 +25,7 @@ function App() {
   const [selectedCard, setSelectedCard] = useState(null);
   const [cards, setCards] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [authorizationEmail, setAuthorizationEmail] = useState(null);
+  const [authorizationEmail, setAuthorizationEmail] = useState({ email: "", password: "" });
   const [registration, setRegistration] = useState(null);
   const [infoToolTipMessage, setInfoToolTipMessage] = useState(false);
 
@@ -57,14 +57,15 @@ function App() {
     if (isLoggedIn) {
       history.push('/');
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn, history]);
 
   function handleLogin(data) {
     apiAuth
       .autorise(data)
       .then((data) => {
         setIsLoggedIn(true);
-        localStorage.setItem("jwt", data.token);
+        localStorage.setItem("jwt", data.jwt);
+
         history.push("/");
       })
       .catch((err) => {
@@ -77,7 +78,7 @@ function App() {
   function handleRegister(data) {
     apiAuth
       .register(data)
-      .then((data) => {
+      .then(() => {
         setRegistration(true);
         handleInfoToolTipMessage();
         history.push("/sign-in");
