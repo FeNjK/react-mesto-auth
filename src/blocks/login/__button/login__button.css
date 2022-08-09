@@ -16,4 +16,17 @@
 
 .login__button:hover {
   cursor: pointer;
+  background: #FFFFFF;
+  opacity: .85;
+  transition: opacity .3s ease-in-out;
+  -webkit-transition: opacity .3s ease-in-out;
+  -moz-transition: opacity .3s ease-in-out;
+  -ms-transition: opacity .3s ease-in-out;
+  -o-transition: opacity .3s ease-in-out;
+}
+
+@media screen and (max-width: 700px) {
+  .login__button {
+    margin-top: 173px;
+  }
 }

@@ -71,3 +71,5 @@
 @import url(./blocks/register/__button/register__button.css);
 @import url(./blocks/register/__link/register__link.css);
 
+@import url(./blocks/popup/__registration-result/popup__registration-result.css);
+@import url(./blocks/popup/__registration-message/popup__registration-message.css);

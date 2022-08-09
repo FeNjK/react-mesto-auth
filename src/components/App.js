@@ -25,7 +25,7 @@ function App() {
   const [selectedCard, setSelectedCard] = useState(null);
   const [cards, setCards] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [authorizationEmail, setAuthorizationEmail] = useState({ email: "", password: "" });
+  const [authorizationEmail, setAuthorizationEmail] = useState("");
   const [registration, setRegistration] = useState(null);
   const [infoToolTipMessage, setInfoToolTipMessage] = useState(false);
 
@@ -37,10 +37,9 @@ function App() {
       return;
     }
 
-    apiAuth
-      .getEmail(jwt)
-      .then(({ email, password }) => {
-        setAuthorizationEmail({ email, password });
+    apiAuth.getEmail(jwt).then((data) => {
+        console.log(data.data.email);
+        setAuthorizationEmail(data.data.email);
         setIsLoggedIn(true);
         history.push("/");
       })
@@ -244,9 +243,8 @@ function App() {
           <Login onLogin={handleLogin} />
         </Route>
         <Route path="/sign-up">
-          <Register onLogin={handleRegister} />
+          <Register onRegister={handleRegister} />
         </Route>
-      
         <ProtectedRoute
           path="/"
           loggedIn={isLoggedIn}

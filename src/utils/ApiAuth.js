@@ -51,7 +51,7 @@ class ApiAuth {
 }
 
 const apiAuth = new ApiAuth({
-  url: "https://mesto.nomoreparties.co",
+  url: "https://auth.nomoreparties.co",
 });
 
 export default apiAuth;

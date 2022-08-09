@@ -16,9 +16,16 @@
 
 .register__button:hover {
   cursor: pointer;
+  background: #FFFFFF;
+  opacity: .85;
+  transition: opacity .3s linear;
+  -webkit-transition: opacity .3s linear;
+  -moz-transition: opacity .3s linear;
+  -ms-transition: opacity .3s linear;
+  -o-transition: opacity .3s linear;
 }
 
-@media screen and (max-width: 769px) {
+@media screen and (max-width: 700px) {
   .register__button {
     margin-top: 173px;
   }
