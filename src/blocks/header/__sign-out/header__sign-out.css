@@ -1,16 +1,16 @@
-.header__link {
+.header__sign-out {
   font-size: 18px;
   line-height: 1.22;
   font-weight: 400;
-  text-align: right;
+  color: #A9A9A9;
+  background-color: #000;
+  text-align: center;
   margin: 0;
   padding: 0;
-  color: #fff;
-  text-decoration: none;
   cursor: pointer;
 }
 
-.header__link:hover {
+.header__sign-out:hover {
   opacity: .6;
   transition: visibility 0.4s ease-out, opacity 0.4s ease-in-out;
   -webkit-transition: visibility 0.4s ease-out, opacity 0.4s ease-in-out;
@@ -20,7 +20,7 @@
 }
 
 @media screen and (max-width: 700px) {
-  .header__link {
+  .header__sign-out {
     margin: 0 30px 0 0;
   }
 }

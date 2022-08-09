@@ -9,8 +9,8 @@ import EditProfilePopup from "./EditProfilePopup.js";
 import EditAvatarPopup from "./EditAvatarPopup.js";
 import AddPlacePopup from "./AddPlacePopup.js";
 //import ConfirmPopup from "./ConfirmPopup.js";
-import { useHistory, Route, Switch, Redirect } from "react-router-dom"
-import ProtectedRoute from './ProtectedRoute.js';
+import { useHistory, Route, Switch, Redirect } from "react-router-dom";
+import ProtectedRoute from "./ProtectedRoute.js";
 import Login from "./Login.js";
 import Register from "./Register.js";
 import InfoTooltip from "./InfoTooltip.js";
@@ -21,7 +21,7 @@ function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
-  //const [isConfirmPopupOpen, setIsConfirmPopupOpen] = useState(null);
+  //const [isConfirmPopupOpen, setIsConfirmPopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
   const [cards, setCards] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -32,12 +32,14 @@ function App() {
   const history = useHistory();
 
   function handleTokenCheck() {
-    const jwt = localStorage.getItem('jwt');
-    if (!jwt) {
+    const token = localStorage.getItem("token");
+    if (!token) {
       return;
     }
 
-    apiAuth.getEmail(jwt).then((data) => {
+    apiAuth
+      .getEmail(token)
+      .then((data) => {
         console.log(data.data.email);
         setAuthorizationEmail(data.data.email);
         setIsLoggedIn(true);
@@ -45,8 +47,8 @@ function App() {
       })
       .catch((err) => {
         console.log(err);
-      })
-  };
+      });
+  }
 
   useEffect(() => {
     handleTokenCheck();
@@ -54,24 +56,21 @@ function App() {
 
   useEffect(() => {
     if (isLoggedIn) {
-      history.push('/');
+      history.push("/");
     }
-  }, [isLoggedIn, history]);
+  }, [isLoggedIn]);
 
   function handleLogin(data) {
     apiAuth
       .autorise(data)
       .then((data) => {
         setIsLoggedIn(true);
-        localStorage.setItem("jwt", data.jwt);
-
+        localStorage.setItem("token", data.token);
         history.push("/");
       })
       .catch((err) => {
-        console.log(
-          `Возникла ошибка при авторизации пользователя ${err}`
-        );
-      })
+        console.log(`Возникла ошибка при авторизации пользователя ${err}`);
+      });
   }
 
   function handleRegister(data) {
@@ -83,18 +82,16 @@ function App() {
         history.push("/sign-in");
       })
       .catch((err) => {
-        console.log(
-          `Возникла ошибка при регистрации пользователя ${err}`
-        );
+        console.log(`Возникла ошибка при регистрации пользователя ${err}`);
         setRegistration(false);
         handleInfoToolTipMessage();
-        history.push("/sign-up");
-      })
+        //history.push("/sign-up");
+      });
   }
 
   function handleSignOut() {
     setIsLoggedIn(false);
-    localStorage.removeItem("jwt");
+    localStorage.removeItem("token");
     history.push("/sign-in");
   }
 
@@ -187,13 +184,11 @@ function App() {
     api
       .addNewCard(placeData)
       .then((newCard) => {
-        setCards([newCard, ...cards]); 
+        setCards([newCard, ...cards]);
         closeAllPopups();
       })
       .catch((err) => {
-        console.log(
-          `Тут какая-то ошибка с добавлением новой карточки ${err}`
-        );
+        console.log(`Тут какая-то ошибка с добавлением новой карточки ${err}`);
       });
   }
 
@@ -233,29 +228,26 @@ function App() {
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
-      <Header 
-        loggedIn={isLoggedIn}
-        signOut={handleSignOut}
-        authorizationEmail={authorizationEmail}
-      />
+      <Header signOut={handleSignOut} authorizationEmail={authorizationEmail} />
       <Switch>
-        <Route path="/sign-in">
+        <Route exact strict path="/sign-in">
           <Login onLogin={handleLogin} />
         </Route>
-        <Route path="/sign-up">
+        <Route exact strict path="/sign-up">
           <Register onRegister={handleRegister} />
         </Route>
         <ProtectedRoute
+          exact
           path="/"
           loggedIn={isLoggedIn}
           component={Main}
-            onEditProfile={handleEditProfileClick}
-            onAddPlace={handleAddPlaceClick}
-            onEditAvatar={handleEditAvatarClick}
-            cards={cards}
-            onCardClick={handleCardClick}
-            onCardLike={handleCardLike}
-            onCardDelete={handleCardDelete}
+          onEditProfile={handleEditProfileClick}
+          onAddPlace={handleAddPlaceClick}
+          onEditAvatar={handleEditAvatarClick}
+          cards={cards}
+          onCardClick={handleCardClick}
+          onCardLike={handleCardLike}
+          onCardDelete={handleCardDelete}
         />
         <Route>
           {isLoggedIn ? <Redirect to="/sign-in" /> : <Redirect to="/" />}
