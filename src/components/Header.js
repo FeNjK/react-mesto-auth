@@ -14,7 +14,7 @@ function Header({ loggedIn, signOut, authorizationEmail }) {
       {location.pathname === "/sign-up" && (
         <Link to="/sign-in" className="header__link">Войти</Link>
       )}
-      {loggedIn && (
+      {loggedIn && location.pathname === "/" &&(
         <div className="header__elem-string">
           <span className="header__user-email">{authorizationEmail}</span>
           <button className="header__sign-out" onClick={() => signOut()}>Выйти</button>

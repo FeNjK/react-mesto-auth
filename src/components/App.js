@@ -59,7 +59,7 @@ function App() {
     if (isLoggedIn) {
       history.push("/");
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn, history]);
 
   function handleLogin(data) {
     apiAuth
