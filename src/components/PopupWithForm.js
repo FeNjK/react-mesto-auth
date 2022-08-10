@@ -22,7 +22,7 @@ function PopupWithForm({
           className={`popup__form popup__form_type_${name}`}
           name={name}
           onSubmit={onSubmit}
-          noValidate
+          /* noValidate */
           autoComplete="off"
         >
           <h3 className="popup__title">{title}</h3>

@@ -29,7 +29,7 @@ function Register({ onRegister }) {
       <form
         className="register__form"
         onSubmit={handleSubmit}
-        noValidate
+        /* noValidate */
         autoComplete="off"
       >
         <input

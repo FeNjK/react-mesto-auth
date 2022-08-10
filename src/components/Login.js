@@ -28,7 +28,7 @@ function Login({ onLogin }) {
       <form
         className="login__form"
         onSubmit={handleSubmit}
-        noValidate
+        /* noValidate */ 
         autoComplete="off"
       >
         <input

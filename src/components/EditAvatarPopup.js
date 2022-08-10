@@ -8,7 +8,7 @@ function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
   // при открытии попапа сбрасываем поле ввода
   useEffect(() => {
     avatarRef.current.value = "";
-  });
+  }, [isOpen]);
 
   function handleSubmit(e) {
     e.preventDefault();

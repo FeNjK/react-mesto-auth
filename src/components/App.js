@@ -34,6 +34,7 @@ function App() {
 
   function handleTokenCheck() {
     const token = localStorage.getItem("token");
+    console.log(token);
     if (!token) {
       return;
     }
@@ -70,6 +71,7 @@ function App() {
       })
       .catch((err) => {
         console.log(`Возникла ошибка при авторизации пользователя ${err}`);
+        handleInfoToolTipMessage();
       });
   }
 
@@ -97,27 +99,31 @@ function App() {
   // Используем стейт для данных из Api
   useEffect(() => {
     // Запрос к Api за информацией о пользователе
-    // и массиве карточек выполняется единожды, при монторивании
-    api
-      .getUserInfo()
-      .then((userData) => {
-        setCurrentUser(userData);
-      })
-      .catch((err) => {
-        console.log(
-          `Тут какая-то ошибка с получением пользовательских данных ${err}`
-        );
-      });
+    // и массиве карточек выполняется единожды, при монтировании
+    if (isLoggedIn) {
+      api
+        .getUserInfo()
+        .then((userData) => {
+          setCurrentUser(userData);
+        })
+        .catch((err) => {
+          console.log(
+            `Тут какая-то ошибка с получением пользовательских данных ${err}`
+          );
+        });
 
-    api
-      .getInitialCards()
-      .then((card) => {
-        setCards(card);
-      })
-      .catch((err) => {
-        console.log(`Тут какая-то ошибка с получением массива карточек ${err}`);
-      });
-  }, []);
+      api
+        .getInitialCards()
+        .then((card) => {
+          setCards(card);
+        })
+        .catch((err) => {
+          console.log(
+            `Тут какая-то ошибка с получением массива карточек ${err}`
+          );
+        });
+    }
+  }, [isLoggedIn]);
   // а вот если бы мы не поставили пустой массив последним
   // то вызоб совершался далеко не единожды */
 
@@ -228,15 +234,22 @@ function App() {
   }
 
   /* Заготовка под альтернативное закрытие попапов */
-  function handlePopupClose(e) {
-    if(e.target.classList.contains('popup_activ') || e.target.classList.contains('popup__close-button')) {
+  /* function handlePopupClose(e) {
+    if (
+      e.target.classList.contains("popup_activ") ||
+      e.target.classList.contains("popup__close-button")
+    ) {
       closeAllPopups();
     }
-  }
+  } */
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
-      <Header signOut={handleSignOut} authorizationEmail={authorizationEmail} />
+      <Header
+        loggedIn={isLoggedIn}
+        signOut={handleSignOut}
+        authorizationEmail={authorizationEmail}
+      />
       <Switch>
         <Route exact strict path="/sign-in">
           <Login onLogin={handleLogin} />
@@ -265,7 +278,7 @@ function App() {
       <ImagePopup card={selectedCard} onClose={closeAllPopups} />
       <EditAvatarPopup
         isOpen={isEditAvatarPopupOpen}
-        onClose={handlePopupClose}
+        onClose={closeAllPopups}
         onUpdateAvatar={handleUpdateAvatar}
       />
       <EditProfilePopup
