@@ -41,7 +41,6 @@ function App() {
     apiAuth
       .getEmail(jwt)
       .then((data) => {
-        //console.log(data);
         setAuthorizationEmail(data.data.email);
         localStorage.setItem("jwt", data.token);
         setIsLoggedIn(true);
@@ -65,10 +64,11 @@ function App() {
   function handleLogin(data) {
     apiAuth
       .autorise(data)
-      .then((data) => {
+      .then((res) => {
         setIsLoggedIn(true);
-        //console.log(data);
-        localStorage.setItem("jwt", data.token);
+        console.log(res.token);
+        setAuthorizationEmail(data.email);
+        localStorage.setItem("jwt", res.token);
         history.push("/");
       })
       .catch((err) => {
