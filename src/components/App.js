@@ -33,16 +33,17 @@ function App() {
   const history = useHistory();
 
   function handleTokenCheck() {
-    const token = localStorage.getItem("token");
-    console.log(token);
-    if (!token) {
+    const jwt = localStorage.getItem("jwt");
+    if (!jwt) {
       return;
     }
 
     apiAuth
-      .getEmail(token)
+      .getEmail(jwt)
       .then((data) => {
+        //console.log(data);
         setAuthorizationEmail(data.data.email);
+        localStorage.setItem("jwt", data.token);
         setIsLoggedIn(true);
         history.push("/");
       })
@@ -66,7 +67,8 @@ function App() {
       .autorise(data)
       .then((data) => {
         setIsLoggedIn(true);
-        localStorage.setItem("token", data.token);
+        //console.log(data);
+        localStorage.setItem("jwt", data.token);
         history.push("/");
       })
       .catch((err) => {

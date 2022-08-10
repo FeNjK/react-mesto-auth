@@ -43,7 +43,7 @@ class ApiAuth {
       method: "GET",
       headers: {
         ...this._headers,
-        Authorization: `Bearer ${token}`,
+        authorization: `Bearer ${token}`,
       },
     })
     .then((res) => this._ringingServer(res))
