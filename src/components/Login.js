@@ -40,7 +40,7 @@ function Login({ onLogin }) {
           minLength="6"
           maxLength="40"
           required
-          value={loginData.email}
+          value={loginData.email || ""}
           onChange={handleChange}
         />
         {/* Заготовка под валидацию формы по аналогии с попапами*/}
@@ -57,7 +57,7 @@ function Login({ onLogin }) {
           minLength="6"
           maxLength="40"
           required
-          value={loginData.password}
+          value={loginData.password || ""}
           onChange={handleChange}
         />
         {/* Заготовка под валидацию формы по аналогии с попапами*/}

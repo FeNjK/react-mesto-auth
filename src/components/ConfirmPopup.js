@@ -1,9 +1,9 @@
 import PopupWithForm from "./PopupWithForm";
 
-function ConfirmPopup({ isOpen, onClose, onConfirm }) {
+function ConfirmPopup({ isOpen, onClose, onConfirm, card }) {
   function handleSubmit(e) {
     e.preventDefault();
-    onConfirm();
+    onConfirm(card);
   }
 
   return (

@@ -8,7 +8,7 @@ import CurrentUserContext from "../contexts/CurrentUserContext.js";
 import EditProfilePopup from "./EditProfilePopup.js";
 import EditAvatarPopup from "./EditAvatarPopup.js";
 import AddPlacePopup from "./AddPlacePopup.js";
-//import ConfirmPopup from "./ConfirmPopup.js";
+import ConfirmPopup from "./ConfirmPopup.js";
 import { useHistory, Route, Switch, Redirect } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute.js";
 import Login from "./Login.js";
@@ -21,9 +21,10 @@ function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
-  //const [isConfirmPopupOpen, setIsConfirmPopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
   const [cards, setCards] = useState([]);
+  const [isConfirmPopupOpen, setIsConfirmPopupOpen] = useState(false);
+  const [removeCard, setRemoveCard] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [authorizationEmail, setAuthorizationEmail] = useState("");
   const [registration, setRegistration] = useState(null);
@@ -40,7 +41,6 @@ function App() {
     apiAuth
       .getEmail(token)
       .then((data) => {
-        console.log(data.data.email);
         setAuthorizationEmail(data.data.email);
         setIsLoggedIn(true);
         history.push("/");
@@ -85,7 +85,6 @@ function App() {
         console.log(`Возникла ошибка при регистрации пользователя ${err}`);
         setRegistration(false);
         handleInfoToolTipMessage();
-        //history.push("/sign-up");
       });
   }
 
@@ -141,11 +140,12 @@ function App() {
   }
 
   // Сделано по аналогии с функцией лайка карточки
-  function handleCardDelete(card) {
+  function handleConfirmDelete(card) {
     api
       .removeCard(card._id)
       .then(() => {
         setCards((state) => state.filter((c) => c._id !== card._id));
+        closeAllPopups();
       })
       .catch((err) => {
         console.log(`Тут какая-то ошибка с удалением карточки ${err}`);
@@ -209,9 +209,10 @@ function App() {
     setSelectedCard(card);
   }
 
-  /* function handleCardDelete(card) {
-    setIsConfirmPopupOpen(card);
-  } */
+  function handleCardDelete(card) {
+    setIsConfirmPopupOpen(!isConfirmPopupOpen);
+    setRemoveCard(card);
+  }
 
   function handleInfoToolTipMessage() {
     setInfoToolTipMessage(true);
@@ -222,8 +223,15 @@ function App() {
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
     setInfoToolTipMessage(false);
+    setIsConfirmPopupOpen(false);
     setSelectedCard(null);
-    /* setIsConfirmPopupOpen(null); */
+  }
+
+  /* Заготовка под альтернативное закрытие попапов */
+  function handlePopupClose(e) {
+    if(e.target.classList.contains('popup_activ') || e.target.classList.contains('popup__close-button')) {
+      closeAllPopups();
+    }
   }
 
   return (
@@ -250,14 +258,14 @@ function App() {
           onCardDelete={handleCardDelete}
         />
         <Route>
-          {isLoggedIn ? <Redirect to="/sign-in" /> : <Redirect to="/" />}
+          {!isLoggedIn ? <Redirect to="/" /> : <Redirect to="/sign-in" />}
         </Route>
       </Switch>
       <Footer />
       <ImagePopup card={selectedCard} onClose={closeAllPopups} />
       <EditAvatarPopup
         isOpen={isEditAvatarPopupOpen}
-        onClose={closeAllPopups}
+        onClose={handlePopupClose}
         onUpdateAvatar={handleUpdateAvatar}
       />
       <EditProfilePopup
@@ -275,14 +283,12 @@ function App() {
         onClose={closeAllPopups}
         isRegistrationGood={registration}
       />
-      {/* Заготовка реализации функций удаления карточек */}
-      {/*Что-то я тут наворотил (по аналогии...)*/}
-      {/* <ConfirmPopup
+      <ConfirmPopup
         isOpen={isConfirmPopupOpen}
         onClose={closeAllPopups}
         onConfirm={handleConfirmDelete}
-        
-      /> */}
+        card={removeCard}
+      />
     </CurrentUserContext.Provider>
   );
 }
